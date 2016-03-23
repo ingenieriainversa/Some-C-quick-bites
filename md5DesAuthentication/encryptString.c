@@ -1,6 +1,7 @@
 /* Compilation: gcc -std=gnu99 -Wall -c -MMD -MP -MF"encryptString.d" -MT"encryptString.d" -o "encryptString.o" encryptString.c
  *              gcc -o encryptString encryptString.o -lcrypt
  */
+
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
