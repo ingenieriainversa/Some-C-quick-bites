@@ -25,30 +25,99 @@
  */
  
 #include<stdio.h>
-#include<math.h>
+#include <stdbool.h>
 
-int inversor(int numero) {
-	int nDigitos = (numero == 0 ? 1 : (int) (log10(numero) + 1));
-	int numeroInvertido = 0;
-	do {
-		nDigitos -= 1;
-		numeroInvertido += (numero % 10) * (pow(10, nDigitos));
-		numero /= 10;
-	} while (numero != 0);
+/* Procedimiento para ordenar dos numeros. */
+void swap(int *x, int *y) {
+	if (*x < *y) {
+		int aux;
+		aux = *x;
+		*x = *y;
+		*y = aux;
+	}
+}
 
-	return numeroInvertido;
+/* Funcion que devuelve la longitud de un int. */
+int LongitudInt(int n) {
+	int i = 1;
+	while (n > 9) {
+		i++;
+		n /= 10;
+	}
+	return i;
+}
+
+/* Funcion que devuelve un int con sus digitos en orden descendente. */
+int OrdenacionDescendenteInt(int n) {
+	int i, n_ordenado = 0;
+	for (i = 9; i >= 0; i--) {
+		int aux = n;
+		while (aux > 0) {
+			int digit = aux % 10;
+			if (digit == i) {
+				n_ordenado *= 10;
+				n_ordenado += digit;
+			}
+			aux /= 10;
+		}
+	}
+	return n_ordenado;
+}
+
+/* Funcion que devuelve un int con sus digitos en orden ascendente. */
+int OrdenacionAscendenteInt(int n) {
+	int i, n_ordenado = 0;
+	for (i = 0; i <= 9; i++) {
+		int aux = n;
+		while (aux > 0) {
+			int digit = aux % 10;
+			if (digit == i) {
+				n_ordenado *= 10;
+				n_ordenado += digit;
+			}
+			aux /= 10;
+		}
+	}
+	return n_ordenado;
+}
+
+/* Funcion que comprueba si el numero introducido tiene 4 digitos. */
+static bool CompruebaDigitos(int n) {
+	if (LongitudInt(n) < 4) {
+		printf("Longitud del numero %d invalida. Tiene que tener 4 digitos.\n", n);
+		return false;
+	} else {
+		return true;
+	}
 }
 
 int main() {
-	int numero = 10000, i, z;
+	int n, x, y = 0, kaprekar = 0;
 
-	for (i = 0, z = 0; i <= numero; i++) {
-		int numeroInvertido = inversor(i);
-		int resultado = i - numeroInvertido;
-		if (resultado == 6174) {
-			z++;
-			printf("%.2d. %.4d - %.4d = %d\n", z, i, numeroInvertido, resultado);
+	do {
+		printf("Numero de 4 digitos: ");
+		scanf("%d", &n);
+	} while (CompruebaDigitos(n) == false);
+
+	x = n;
+	y = OrdenacionAscendenteInt(x);
+
+	/* Se asigna a x el numero mayor y a y el menor. */
+	swap(&x, &y);
+
+	kaprekar = x - y;
+	printf("%d - %d = %d\n", x, y, kaprekar);
+
+	do {
+		if (kaprekar == 0) {
+			printf("Numero %d invalido por resto 0.\n", n);
+			break;
 		}
-	}
+		x = OrdenacionDescendenteInt(kaprekar);
+		y = OrdenacionAscendenteInt(kaprekar);
+		kaprekar = x - y;
+		printf("%d - %d = %d\n", x, y, kaprekar);
+	} while (kaprekar != 6174);
+
 	return 0;
 }
