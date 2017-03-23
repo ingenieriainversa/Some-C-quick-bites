@@ -25,7 +25,7 @@
  */
  
 #include<stdio.h>
-#include <stdbool.h>
+#include<stdbool.h>
 
 /* Procedimiento para ordenar dos numeros. */
 void swap(int *x, int *y) {
