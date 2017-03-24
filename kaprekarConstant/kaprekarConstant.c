@@ -56,7 +56,7 @@ static bool CompruebaDigitos(int n) {
 }
 
 int main() {
-	int n, x, y = 0, kaprekar = 0;
+	int n, x, y, kaprekar;
 
 	do {
 		printf("Numero de 4 digitos: ");
