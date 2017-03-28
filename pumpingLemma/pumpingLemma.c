@@ -30,27 +30,54 @@
 #include <stdbool.h>
 
 /* Longitud maxima + 1. */
-#define MAX_LONG_W 256
+#define MAX_LONG 256
 
 /* Variables para la constante de bombeo y para subcadenas de w. */
-int n, x, y;
+int n, longitudW, longitudXY, longitudX, longitudY, longitudZ;
+bool check_1, check_2, check_3;
+
+void printCheck1(bool check_1, int longitudW, int n) {
+	printf("|w|>=n  \t (%s) -> |%d|>=%d\n", check_1 ? "true" : "false",
+			longitudW, n);
+}
+void printCheck2(bool check_2, int longitudXY, int n) {
+	printf("|xy|<=n  \t (%s) -> |%d|<=%d\n", check_2 ? "true" : "false",
+			longitudXY, n);
+}
+
+void printCheck3(bool check_3, int longitudY) {
+	printf("|y|>0   \t (%s) -> |%d|>0\n", check_3 ? "true" : "false",
+			longitudY);
+}
+
+int checkLongitudDeCadena(char *cadena) {
+	if (cadena == NULL) {
+		printf("ERROR: Longitud de cadena.\n");
+		return 1;
+	} else {
+		return 0;
+	}
+}
 
 int main(int argc, char *argv[]) {
 
+	/* Se asigna memoria para la cadena l del lenguaje, y se comprueba si esta bien. */
+	char *l = malloc(MAX_LONG);
+	checkLongitudDeCadena(l);
+
+	printf("Introduce un lenguaje: ");
+
+	/* Guarda la cadena l, con limite de longitud. Por ejemplo 01^n0. */
+	fgets(l, MAX_LONG, stdin);
+
+
+
 	/* Se asigna memoria para la cadena w y se comprueba si esta bien. */
-	char *w = malloc(MAX_LONG_W);
-	if (w == NULL) {
-		printf("ERROR: Longitud de cadena.\n");
-		return 1;
-	}
-
-	printf("Introduce una cadena: ");
-
-	/* Guarda la cadena w, con limite de longitud. */
-	fgets(w, MAX_LONG_W, stdin);
+	char *w = malloc(MAX_LONG);
+	checkLongitudDeCadena(w);
 
 	/* Se obtiene la logitud de la cadena de entrada. */
-	int longitudW = strlen(w) - 1;
+	longitudW = strlen(w) - 1;
 
 	/* Elimina salto de linea del final, si existiera. */
 	if ((longitudW + 1 > 0) && (w[longitudW] == '\n')) {
@@ -62,23 +89,18 @@ int main(int argc, char *argv[]) {
 	/* Guarda la constante de bombeo.*/
 	scanf("%d", &n);
 
+	printf("\nCadena w\t\t-> %s\n", w);
+	printf("Constante de bombeo n\t-> %d\n\n", n);
+
 	/* Se asigna memoria para la subcadena xy y se comprueba si esta bien. */
 	char *xy = malloc(sizeof(n));
-	if (xy == NULL) {
-		printf("ERROR: Longitud de cadena.\n");
-		return 1;
-	}
+	checkLongitudDeCadena(xy);
 
 	/* 1. Se comprueba si |w|>=n. */
 	if (longitudW >= n) {
-		printf("La cadena \"%s\" cumple la regla |w|>=n, ya que |%d|>=%d.\n\n",
-				w, longitudW, n);
+		check_1 = true;
 
 		/* 2. Se descompone la cadena w en tres subcadenas x,y y z. */
-		int i;
-		for (i = 0; i < longitudW; i++) {
-			printf("w[%d] = %c\n", i, w[i]);
-		}
 
 		/* Copio los n primeros simbolos de la cadena w en la subcadena xy. */
 		strncpy(xy, w, n);
@@ -87,36 +109,84 @@ int main(int argc, char *argv[]) {
 		xy[n] = 0;
 
 		/* Se obtiene la logitud de la cadena xy. */
-		int longitudXY = strlen(xy);
-
-		/* Se asigna memoria para la subcadena z y se comprueba si esta bien. */
-		char *z = malloc(longitudW - longitudXY);
-		if (z == NULL) {
-			printf("ERROR: Longitud de cadena.\n");
-			return 1;
-		}
-
-		strcpy(z, &w[n]);
-
-		printf("\nn = %d\n", n);
-		printf("w = %s\n", w);
-		printf("|w|>=n  \t -> |%d|>=%d\n", longitudW, n);
-		printf("w = xyz \t -> %s = %s+%s\n", w, xy, z);
+		longitudXY = strlen(xy);
 
 		/* 2.1 Se comprueba que |xy|<=n. */
+		if (longitudXY <= n) {
+			check_2 = true;
 
-		/* 2.2 Se comprueba que y no es cadena vacia. */
+			/* Se asigna memoria para la subcadena z y se comprueba si esta bien. */
+			char *z = malloc(longitudW - longitudXY);
+			checkLongitudDeCadena(z);
 
-		/* 2.3 Se comprueba que para todo k>=0 la cadena xy^{k}z tambien pertenece a L. */
+			/* Copio los ultimos simbolos de la cadena w en la subcadena z. */
+			strcpy(z, &w[n]);
 
-		free(w);
-		free(xy);
-		free(z);
+			/* Se obtiene la logitud de la cadena z. */
+			longitudZ = strlen(z);
 
+			/* Se asigna memoria para la subcadena z y se comprueba si esta bien. */
+			char *x = malloc(longitudW - longitudXY);
+			checkLongitudDeCadena(x);
+
+			/* Copio los n-1 primeros simbolos de la cadena xy en la subcadena x. */
+			strncpy(x, xy, n - 1);
+
+			/* Elimino el ultimo caracter de la cadena x. */
+			x[n - 1] = 0;
+
+			/* Se obtiene la logitud de la cadena x. */
+			longitudX = strlen(x);
+
+			/* Se asigna memoria para la subcadena y y se comprueba si esta bien. */
+			char *y = malloc(longitudXY - longitudX);
+			checkLongitudDeCadena(y);
+
+			/* Copio los ultimos simbolos de la cadena w en la subcadena y. */
+			strcpy(y, &xy[longitudXY - 1]);
+
+			/* Se obtiene la logitud de la cadena y. */
+			longitudY = strlen(y);
+
+			/* 2.2 Se comprueba que y no es cadena vacia. */
+			if (longitudY > 0) {
+				check_3 = true;
+				printCheck1(check_1, longitudW, n);
+				printCheck2(check_2, longitudXY, n);
+				printCheck3(check_3, longitudY);
+
+				/* 2.3 Se comprueba que para todo k>=0 la cadena xy^{k}z tambien pertenece a L. */
+				int k = 5;
+				char *nueva_cadena = malloc(longitudW - 1);
+				checkLongitudDeCadena(nueva_cadena);
+				strcpy(nueva_cadena, x);
+				while (k > 0) {
+					strcat(nueva_cadena, y);
+					k--;
+				}
+				strcat(nueva_cadena, z);
+
+				printf("\n%s + %s + %s = _%s_\n", x, y, z, nueva_cadena);
+			} else {
+				check_3 = false;
+				printCheck3(check_3, longitudY);
+			}
+
+			free(x);
+			free(y);
+			free(z);
+		} else {
+			check_2 = false;
+			printCheck2(check_2, longitudXY, n);
+		}
 	} else {
-		printf("La cadena \"%s\" no cumple la regla |w|>=n, ya que |%d|<%d.\n",
-				w, longitudW, n);
+		check_1 = false;
+		printCheck1(check_1, longitudW, n);
+		return 1;
 	}
+
+	free(w);
+	free(xy);
 
 	return 0;
 }
