@@ -33,7 +33,7 @@
 #define MAX_LONG 256
 
 /* Variables para la constante de bombeo y para subcadenas de w. */
-int n, longitudW, longitudXY, longitudX, longitudY, longitudZ;
+int n, longitudL, longitudW, longitudXY, longitudX, longitudY, longitudZ;
 bool check_1, check_2, check_3;
 
 void printCheck1(bool check_1, int longitudW, int n) {
@@ -59,22 +59,67 @@ int checkLongitudDeCadena(char *cadena) {
 	}
 }
 
-int main(int argc, char *argv[]) {
-
-	/* Se asigna memoria para la cadena l del lenguaje, y se comprueba si esta bien. */
+void checkLenguaje() {
+	/* Se asigna memoria para el lenguaje l y se comprueba si esta bien. */
 	char *l = malloc(MAX_LONG);
 	checkLongitudDeCadena(l);
 
 	printf("Introduce un lenguaje: ");
 
-	/* Guarda la cadena l, con limite de longitud. Por ejemplo 01^n0. */
+	/* Guarda la cadena l, con limite de longitud. */
 	fgets(l, MAX_LONG, stdin);
 
+	/* Se obtiene la logitud de la cadena de entrada. */
+	longitudL = strlen(l) - 1;
 
+	/* Elimina salto de linea del final, si existiera. */
+	if ((longitudL + 1 > 0) && (l[longitudL] == '\n')) {
+		l[longitudL] = '\0';
+	}
+
+	printf("\nLenguaje: _%s_\n\n", l);
+
+	int i, bombeos = 0;
+	char *token = "\0";
+	char simboloBombeo;
+	char constBombeo;
+
+	for (i = 0; i < longitudL; i++) {
+		/* Si l[i] es "^" */
+		if (l[i] == 94) {
+			bombeos++;
+			token = " => pow";
+			simboloBombeo = l[i - 1];
+			constBombeo = l[i + 1];
+		}
+
+		printf("%d => _%c_%s\n", i, l[i], token);
+	}
+
+	while(bombeos>0){
+		printf("\nEl simbolo de bombeo es: _%c_\n\n", simboloBombeo);
+		printf("Introduce la constante de bombeo \"%c\" (int): ", constBombeo);
+		bombeos--;
+	}
+
+	/* Guarda la constante de bombeo.*/
+	scanf("%d", &n);
+
+	exit(0);
+}
+
+int main(int argc, char *argv[]) {
+
+	checkLenguaje();
 
 	/* Se asigna memoria para la cadena w y se comprueba si esta bien. */
 	char *w = malloc(MAX_LONG);
 	checkLongitudDeCadena(w);
+
+	printf("Introduce una cadena: ");
+
+	/* Guarda la cadena w, con limite de longitud. */
+	fgets(w, MAX_LONG, stdin);
 
 	/* Se obtiene la logitud de la cadena de entrada. */
 	longitudW = strlen(w) - 1;
@@ -151,22 +196,35 @@ int main(int argc, char *argv[]) {
 			/* 2.2 Se comprueba que y no es cadena vacia. */
 			if (longitudY > 0) {
 				check_3 = true;
+
+				/* En este caso, las tres comprobaciones que hay que hacer son true,
+				 * por lo tanto se imprime cada uno de los chequeos.
+				 * */
 				printCheck1(check_1, longitudW, n);
 				printCheck2(check_2, longitudXY, n);
 				printCheck3(check_3, longitudY);
 
 				/* 2.3 Se comprueba que para todo k>=0 la cadena xy^{k}z tambien pertenece a L. */
 				int k = 5;
+				printf("\nx y^{%d} z = ", k);
+
+				/* Se asigna memoria para la cadena final y se comprueba si esta bien. */
 				char *nueva_cadena = malloc(longitudW - 1);
 				checkLongitudDeCadena(nueva_cadena);
+
+				/* Se construye la nueva cadena, incuyendo en primer lugar x. */
 				strcpy(nueva_cadena, x);
+
+				/* Luego se introduce n veces y. */
 				while (k > 0) {
 					strcat(nueva_cadena, y);
 					k--;
 				}
+
+				/* Y finalmente se introduce z. */
 				strcat(nueva_cadena, z);
 
-				printf("\n%s + %s + %s = _%s_\n", x, y, z, nueva_cadena);
+				printf("%s\n", nueva_cadena);
 			} else {
 				check_3 = false;
 				printCheck3(check_3, longitudY);
