@@ -18,17 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #ifndef MATRIZ_H_
 #define MATRIZ_H_
 
 struct MatrizStruct;
 typedef struct MatrizStruct* Matriz;
 
-void imprimir(Matriz m);
+void printDatos(Matriz m);
 int determinante(Matriz m);
-void traspuesta(Matriz m);
-void adjunta(Matriz m);
-void inversa(Matriz m);
+Matriz traspuesta(Matriz m);
+Matriz adjunta(Matriz m);
+Matriz inversa(Matriz m);
 
 #endif /* MATRIZ_H_ */
