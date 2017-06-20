@@ -63,13 +63,13 @@ Matriz traspuesta(Matriz m) {
 
 Matriz adjunta(Matriz m) {
 	m->matrix_aAdj[0][0] = m->matrix_a[1][1] * m->matrix_a[2][2] - m->matrix_a[2][1] * m->matrix_a[1][2];
-	m->matrix_aAdj[1][0] = -(m->matrix_a[1][0] * m->matrix_a[2][2] - m->matrix_a[2][0] * m->matrix_a[1][2]);
-	m->matrix_aAdj[2][0] = m->matrix_a[1][0] * m->matrix_a[2][1] - m->matrix_a[2][0] * m->matrix_a[1][1];
-	m->matrix_aAdj[0][1] = -(m->matrix_a[0][1] * m->matrix_a[2][2] - m->matrix_a[2][1] * m->matrix_a[0][2]);
+	m->matrix_aAdj[0][1] = -(m->matrix_a[1][0] * m->matrix_a[2][2] - m->matrix_a[2][0] * m->matrix_a[1][2]);
+	m->matrix_aAdj[0][2] = m->matrix_a[1][0] * m->matrix_a[2][1] - m->matrix_a[2][0] * m->matrix_a[1][1];
+	m->matrix_aAdj[1][0] = -(m->matrix_a[0][1] * m->matrix_a[2][2] - m->matrix_a[2][1] * m->matrix_a[0][2]);
 	m->matrix_aAdj[1][1] = m->matrix_a[0][0] * m->matrix_a[2][2] - m->matrix_a[2][0] * m->matrix_a[0][2];
-	m->matrix_aAdj[2][1] = -(m->matrix_a[0][0] * m->matrix_a[2][1] - m->matrix_a[2][0] * m->matrix_a[0][1]);
-	m->matrix_aAdj[0][2] = m->matrix_a[0][1] * m->matrix_a[1][2] - m->matrix_a[1][1] * m->matrix_a[0][2];
-	m->matrix_aAdj[1][2] = -(m->matrix_a[0][0] * m->matrix_a[1][2] - m->matrix_a[1][0] * m->matrix_a[0][2]);
+	m->matrix_aAdj[1][2] = -(m->matrix_a[0][0] * m->matrix_a[2][1] - m->matrix_a[2][0] * m->matrix_a[0][1]);
+	m->matrix_aAdj[2][0] = m->matrix_a[0][1] * m->matrix_a[1][2] - m->matrix_a[1][1] * m->matrix_a[0][2];
+	m->matrix_aAdj[2][1] = -(m->matrix_a[0][0] * m->matrix_a[1][2] - m->matrix_a[1][0] * m->matrix_a[0][2]);
 	m->matrix_aAdj[2][2] = m->matrix_a[0][0] * m->matrix_a[1][1] - m->matrix_a[1][0] * m->matrix_a[0][1];
 
 	return m;
@@ -84,13 +84,13 @@ Matriz inversa(Matriz m) {
 	 * elemento de la matriz sera el numerador de una fraccion que
 	 * tendra por denominador el determinite de la matriz de entrada. */
 	m->matrix_aInv[0][0] = m->matrix_aAdj[0][0];
-	m->matrix_aInv[1][0] = m->matrix_aAdj[1][0];
-	m->matrix_aInv[2][0] = m->matrix_aAdj[2][0];
-	m->matrix_aInv[0][1] = m->matrix_aAdj[0][1];
+	m->matrix_aInv[0][1] = m->matrix_aAdj[1][0];
+	m->matrix_aInv[0][2] = m->matrix_aAdj[2][0];
+	m->matrix_aInv[1][0] = m->matrix_aAdj[0][1];
 	m->matrix_aInv[1][1] = m->matrix_aAdj[1][1];
-	m->matrix_aInv[2][1] = m->matrix_aAdj[2][1];
-	m->matrix_aInv[0][2] = m->matrix_aAdj[0][2];
-	m->matrix_aInv[1][2] = m->matrix_aAdj[1][2];
+	m->matrix_aInv[1][2] = m->matrix_aAdj[2][1];
+	m->matrix_aInv[2][0] = m->matrix_aAdj[0][2];
+	m->matrix_aInv[2][1] = m->matrix_aAdj[1][2];
 	m->matrix_aInv[2][2] = m->matrix_aAdj[2][2];
 
 	return m;
