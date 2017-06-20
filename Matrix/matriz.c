@@ -23,8 +23,8 @@
  *
  * Usage:       ./matriz
  */
- 
- #include "matriz.h"
+
+#include "matriz.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,41 +36,8 @@ struct MatrizStruct {
 	int matrix_a[3][3];
 	int matrix_aT[3][3];
 	int matrix_aAdj[3][3];
+	int matrix_aInv[3][3];
 };
-
-int main(void) {
-	struct MatrizStruct* matriz = malloc(sizeof(struct MatrizStruct));
-
-	for (i = 0; i < 3; i++) {
-		for (j = 0; j < 3; j++) {
-			printf("Numero %d,%d: ", i + 1, j + 1);
-			scanf("%d", &matriz->matrix_a[i][j]);
-		}
-	}
-	printf("\n");
-	imprimir(matriz);
-	printf("\n");
-	printf("|A| =  %d\n", determinante(matriz));
-	printf("\n");
-	traspuesta(matriz);
-	printf("\n");
-
-	return 0;
-}
-
-void imprimir(Matriz m) {
-	for (i = 0; i < 3; i++) {
-		if (i == 1) {
-			printf(" A  =");
-		} else {
-			printf("     ");
-		}
-		for (j = 0; j < 3; j++) {
-			printf("%3d", m->matrix_a[i][j]);
-		}
-		printf("\n");
-	}
-}
 
 int determinante(Matriz m) {
 	return (m->matrix_a[0][0] * m->matrix_a[1][1] * m->matrix_a[2][2])
@@ -81,7 +48,7 @@ int determinante(Matriz m) {
 			- (m->matrix_a[0][1] * m->matrix_a[1][0] * m->matrix_a[2][2]);
 }
 
-void traspuesta(Matriz m) {
+Matriz traspuesta(Matriz m) {
 	m->matrix_aT[0][0] = m->matrix_a[0][0];
 	m->matrix_aT[0][1] = m->matrix_a[1][0];
 	m->matrix_aT[0][2] = m->matrix_a[2][0];
@@ -92,25 +59,111 @@ void traspuesta(Matriz m) {
 	m->matrix_aT[2][1] = m->matrix_a[1][2];
 	m->matrix_aT[2][2] = m->matrix_a[2][2];
 
+	return m;
+}
+
+Matriz adjunta(Matriz m) {
+	m->matrix_aAdj[0][0] = m->matrix_a[1][1] * m->matrix_a[2][2] - m->matrix_a[2][1] * m->matrix_a[1][2];
+	m->matrix_aAdj[1][0] = -(m->matrix_a[1][0] * m->matrix_a[2][2] - m->matrix_a[2][0] * m->matrix_a[1][2]);
+	m->matrix_aAdj[2][0] = m->matrix_a[1][0] * m->matrix_a[2][1] - m->matrix_a[2][0] * m->matrix_a[1][1];
+	m->matrix_aAdj[0][1] = -(m->matrix_a[0][1] * m->matrix_a[2][2] - m->matrix_a[2][1] * m->matrix_a[0][2]);
+	m->matrix_aAdj[1][1] = m->matrix_a[0][0] * m->matrix_a[2][2] - m->matrix_a[2][0] * m->matrix_a[0][2];
+	m->matrix_aAdj[2][1] = -(m->matrix_a[0][0] * m->matrix_a[2][1] - m->matrix_a[2][0] * m->matrix_a[0][1]);
+	m->matrix_aAdj[0][2] = m->matrix_a[0][1] * m->matrix_a[1][2] - m->matrix_a[1][1] * m->matrix_a[0][2];
+	m->matrix_aAdj[1][2] = -(m->matrix_a[0][0] * m->matrix_a[1][2] - m->matrix_a[1][0] * m->matrix_a[0][2]);
+	m->matrix_aAdj[2][2] = m->matrix_a[0][0] * m->matrix_a[1][1] - m->matrix_a[1][0] * m->matrix_a[0][1];
+
+	return m;
+}
+
+Matriz inversa(Matriz m) {
+	/* Una matriz solo es invertible si su determinante es distinto de 0. */
+
+	/* La matriz inversa es igual a (1/|A|)*(Adj(A))^t */
+
+	/* Construyo solo la matriz traspuesta de la adjunta. Cada
+	 * elemento de la matriz sera el numerador de una fraccion que
+	 * tendra por denominador el determinite de la matriz de entrada. */
+	m->matrix_aInv[0][0] = m->matrix_aAdj[0][0];
+	m->matrix_aInv[1][0] = m->matrix_aAdj[1][0];
+	m->matrix_aInv[2][0] = m->matrix_aAdj[2][0];
+	m->matrix_aInv[0][1] = m->matrix_aAdj[0][1];
+	m->matrix_aInv[1][1] = m->matrix_aAdj[1][1];
+	m->matrix_aInv[2][1] = m->matrix_aAdj[2][1];
+	m->matrix_aInv[0][2] = m->matrix_aAdj[0][2];
+	m->matrix_aInv[1][2] = m->matrix_aAdj[1][2];
+	m->matrix_aInv[2][2] = m->matrix_aAdj[2][2];
+
+	return m;
+}
+
+void printDatos(Matriz m) {
+
+	/* Imprime la matriz de entrada. */
+	printf("\nMatriz:\n");
 	for (i = 0; i < 3; i++) {
-		if (i == 1) {
-			printf(" AT =");
-		} else {
-			printf("     ");
+		for (j = 0; j < 3; j++) {
+			printf("%3d", m->matrix_a[i][j]);
 		}
+		printf("\n");
+	}
+
+	/* Imprime su determinante. */
+	printf("\nEl determinante es: %d\n", determinante(m));
+
+	/* Imprime la matriz traspuesta. */
+	printf("\nMatriz traspuesta:\n");
+	for (i = 0; i < 3; i++) {
 		for (j = 0; j < 3; j++) {
 			printf("%3d", m->matrix_aT[i][j]);
 		}
 		printf("\n");
 	}
+
+	/* Imprime la matriz adjunta. */
+	printf("\nMatriz adjunta:\n");
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			printf("%3d", m->matrix_aAdj[i][j]);
+		}
+		printf("\n");
+	}
+
+	printf("\nMatriz inversa:\n");
+	/* Solo se calculara la inversa si el determinante es distinto de cero. */
+	if(determinante(m) != 0){
+		inversa(m);
+
+		/* Imprime la matriz inversa. */
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				printf("%3d/%d", m->matrix_aInv[i][j], determinante(m));
+			}
+			printf("\n");
+		}
+	} else {
+		printf("No tiene invertida por que su determinante es 0.\n");
+	}
 }
 
-void adjunta(Matriz m) {
-	m->matrix_aAdj[0][0] = pow(-1, 2)
-			* (m->matrix_a[1][1] * m->matrix_a[2][2]
-					- m->matrix_a[2][0] * m->matrix_a[1][2]);
-}
+int main(void) {
+	Matriz matriz = malloc(sizeof(struct MatrizStruct));
 
-void inversa(Matriz m) {
-	// una matriz solo es invertible si su determinante es distinto de 0.
+	/* Pide datos de la matriz 3X3 */
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			printf("Numero %d,%d: ", i + 1, j + 1);
+			scanf("%d", &matriz->matrix_a[i][j]);
+		}
+	}
+
+	/* Se calcula todo */
+	determinante(matriz);
+	traspuesta(matriz);
+	adjunta(matriz);
+
+	/* Se muestran todos los datos por pantalla. */
+	printDatos(matriz);
+
+	return 0;
 }
