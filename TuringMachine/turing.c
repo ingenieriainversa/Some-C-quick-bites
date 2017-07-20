@@ -41,7 +41,7 @@ void estado_q1(char*, int);
 void estado_q2(char*, int);
 
 void printLog(char *w) {
-	printf("w es \"%s\" (%lu)\n\n", w, strlen(w));
+	printf("w es \"%s\" (%d)\n\n", w, strlen(w));
 }
 
 void addBlankL(char *w) {
@@ -62,12 +62,14 @@ void addBlankR(char *w) {
 	printLog(w);
 }
 
-void fin(char *w){
+void fin(char *w) {
 	printf("Enhorabuena! se cumple que a^{n}b^{n} | n >= 0\n");
 }
 
-void printTest(char *w, int i, char x, char m, char *e){
-	printf("w es: \"%s\". Leo \"%c\", lo cambio por \"%c\", me muevo a la %c y me voy al estado %s.\n", w, w[i], x, m, e);
+void printTest(char *w, int i, char x, char m, char *e) {
+	printf(
+			"w es: \"%s\". Leo \"%c\", lo cambio por \"%c\", me muevo a la %c y me voy al estado %s.\n",
+			w, w[i], x, m, e);
 }
 
 void estado_q0(char *w, int i) {
@@ -165,6 +167,14 @@ void estado_q2(char *w, int i) {
 	}
 }
 
+void removeDuplicate(char w[]) {
+	for(i=0;i<=strlen(w);i++){
+		printf("w[%d] = %c\n", i, w[i]);
+	}
+
+	//return w;
+}
+
 int main(int argc, char *argv[]) {
 
 	/* Se asigna memoria para la cadena w. */
@@ -183,6 +193,10 @@ int main(int argc, char *argv[]) {
 	if ((longitudW + 1 > 0) && (w[longitudW] == '\n')) {
 		w[longitudW] = '\0';
 	}
+
+	//printf("Output is : %s \n", removeDuplicate(w));
+
+	removeDuplicate(w);
 
 	printLog(w);
 	printf("Añadiendo un blanco por la izquierda.\n");
