@@ -40,10 +40,6 @@ void estado_q0(char*, int);
 void estado_q1(char*, int);
 void estado_q2(char*, int);
 
-void printLog(char *w) {
-	printf("w es \"%s\" (%d)\n\n", w, strlen(w));
-}
-
 void addBlankL(char *w) {
 	/* Recorro el array de derecha a izquierda y desplazo
 	 * los caracteres una posicion a la derecha */
@@ -51,22 +47,24 @@ void addBlankL(char *w) {
 		w[i] = w[i - 1];
 	}
 
-	/* Finalmente añado un blanco por la izquierda. */
+	/* Concateno la cadena w con un blanco por la izquierda. */
 	w[i] = '_';
-	printLog(w);
 }
 
 void addBlankR(char *w) {
 	/* Concateno la cadena w con un blanco por la derecha. */
 	strcat(w, "_");
-	printLog(w);
 }
 
-void fin(char *w) {
-	printf("Enhorabuena! se cumple que a^{n}b^{n} | n >= 0\n");
+void salidaTrue() {
+	printf("\nEnhorabuena! se cumple que a^{n}b^{n} | n >= 0\n");
 }
 
-void printTest(char *w, int i, char x, char m, char *e) {
+void salidaFalse() {
+	printf("\nNo se cumple que a^{n}b^{n} | n >= 0\n");
+}
+
+void printLog(char *w, int i, char x, char m, char *e) {
 	printf(
 			"w es: \"%s\". Leo \"%c\", lo cambio por \"%c\", me muevo a la %c y me voy al estado %s.\n",
 			w, w[i], x, m, e);
@@ -76,7 +74,7 @@ void estado_q0(char *w, int i) {
 	// Si leo un 0
 	if (w[i] == '0') {
 
-		printTest(w, i, '_', 'R', "q1");
+		printLog(w, i, '_', 'R', "q1");
 
 		// lo cambio por un blanco
 		w[i] = '_';
@@ -86,7 +84,7 @@ void estado_q0(char *w, int i) {
 		// Si leo un 1
 	} else if (w[i] == '1') {
 
-		printTest(w, i, '_', 'L', "q2");
+		printLog(w, i, '_', 'L', "q2");
 
 		// lo cambio por un blanco
 		w[i] = '_';
@@ -96,12 +94,12 @@ void estado_q0(char *w, int i) {
 		// Si leo un blanco
 	} else if (w[i] == '_') {
 
-		printTest(w, i, '_', '!', "q0");
+		printLog(w, i, '_', '!', "q0");
 
 		// lo dejo en blanco
 		w[i] = '_';
 		// y finalmente se detiene la maquina de Turing.
-		fin(w);
+		salidaTrue();
 	}
 }
 
@@ -109,7 +107,7 @@ void estado_q1(char *w, int i) {
 	// Si leo un 0
 	if (w[i] == '0') {
 
-		printTest(w, i, '0', 'R', "q1");
+		printLog(w, i, '0', 'R', "q1");
 
 		// no modifico el valor 0,
 		// me muevo a la derecha (R) y sigo en el estado q1.
@@ -118,7 +116,7 @@ void estado_q1(char *w, int i) {
 		// Si leo un 1
 	} else if (w[i] == '1') {
 
-		printTest(w, i, '1', 'R', "q1");
+		printLog(w, i, '1', 'R', "q1");
 
 		// no modifico el valor 1,
 		// me muevo a la derecha (R) y sigo en el estado q1.
@@ -127,7 +125,7 @@ void estado_q1(char *w, int i) {
 		// Si leo un blanco
 	} else if (w[i] == '_') {
 
-		printTest(w, i, '_', 'L', "q0");
+		printLog(w, i, '_', 'L', "q0");
 
 		// lo dejo en blanco
 		w[i] = '_';
@@ -140,7 +138,7 @@ void estado_q2(char *w, int i) {
 	// Si leo un 0
 	if (w[i] == '0') {
 
-		printTest(w, i, '0', 'L', "q2");
+		printLog(w, i, '0', 'L', "q2");
 
 		// no modifico el valor 0,
 		// me muevo a la izquierda (L) y sigo en el estado q2.
@@ -149,7 +147,7 @@ void estado_q2(char *w, int i) {
 		// Si leo un 1
 	} else if (w[i] == '1') {
 
-		printTest(w, i, '1', 'L', "q2");
+		printLog(w, i, '1', 'L', "q2");
 
 		// no modifico el valor 1,
 		// me muevo a la izquierda (L) y sigo en el estado q2.
@@ -158,21 +156,13 @@ void estado_q2(char *w, int i) {
 		// Si leo un blanco
 	} else if (w[i] == '_') {
 
-		printTest(w, i, '_', 'R', "q0");
+		printLog(w, i, '_', 'R', "q0");
 
 		// lo dejo en blanco
 		w[i] = '_';
 		// me muevo a la derecha (R) y me voy al estado q0.
 		estado_q0(w, i += 1);
 	}
-}
-
-void removeDuplicate(char w[]) {
-	for(i=0;i<=strlen(w);i++){
-		printf("w[%d] = %c\n", i, w[i]);
-	}
-
-	//return w;
 }
 
 int main(int argc, char *argv[]) {
@@ -194,21 +184,22 @@ int main(int argc, char *argv[]) {
 		w[longitudW] = '\0';
 	}
 
-	//printf("Output is : %s \n", removeDuplicate(w));
+	/* Primera condicion es que la cadena debe ser par */
+	if (strlen(w) % 2 != 0) {
+		salidaFalse();
+	} else {
 
-	removeDuplicate(w);
+		/* Se incorpora un blanco por la izquierda
+		 * y otro por la derecha de la cadena w. */
+		addBlankL(w);
+		addBlankR(w);
 
-	printLog(w);
-	printf("Añadiendo un blanco por la izquierda.\n");
-	addBlankL(w);
+		/* Le digo a la maquina de Turing que empiece
+		 * por el caracter w[1] en el estado q0 */
+		estado_q0(w, 1);
+	}
 
-	printf("Añadiendo un blanco por la derecha.\n");
-	addBlankR(w);
-
-	/* Le digo a la maquina de Turing que empiece
-	 * por el caracter w[1] en el estado q0 */
-	estado_q0(w, 1);
-
+	/* Se libera la memoria reservada para la daena w. */
 	free(w);
 
 	return 0;
