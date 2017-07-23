@@ -2,7 +2,7 @@
  * matriz.h v0.01
  * Copyleft - 2017  Javier Dominguez Gomez
  * Written by Javier Dominguez Gomez <jdg@member.fsf.org>
- * GnuPG Key: 6ECD1616
+ * GnuPG Key: D6648E2B
  * Madrid, Spain
  *
  * This program is free software: you can redistribute it and/or modify
