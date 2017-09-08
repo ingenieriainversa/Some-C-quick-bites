@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdbool.h>
 
-char w[10];
+int num;
 int veces[10];
 
 bool compruebaNumero(char *w) {
@@ -44,20 +44,35 @@ bool compruebaNumero(char *w) {
 	return true;
 }
 
+int getLongitudInt(long x) {
+	int len = 1;
+	while (x > 0) {
+		x = x / 10;
+		len++;
+	}
+	return len - 2;
+}
+
 int main() {
-	for(num=0;num<=9999999999;num++){
-		printf("w = %s\n\n", w);
-		compruebaNumero(w);
+	int n = 12103;
+
+	int longitudInt = getLongitudInt(n), numArray[longitudInt];
+
+	while (n > 0) {
+		numArray[longitudInt] = n % 10;
+		n /= 10;
+		longitudInt--;
 	}
 
-//	printf("Cantidad de 0 que tiene: %d\n");
-//	printf("Cantidad de 1 que tiene: %d\n");
-//	printf("Cantidad de 2 que tiene: %d\n");
-//	printf("Cantidad de 3 que tiene: %d\n");
-//	printf("Cantidad de 4 que tiene: %d\n");
-//	printf("Cantidad de 5 que tiene: %d\n");
-//	printf("Cantidad de 6 que tiene: %d\n");
-//	printf("Cantidad de 7 que tiene: %d\n");
-//	printf("Cantidad de 8 que tiene: %d\n");
-//	printf("Cantidad de 9 que tiene: %d\n");
+	printf("%d\n", numArray[0]);
+
+	int i;
+	for(i=0;i<=9;i++){
+		printf("%d\n", numArray[i]);
+	}
+
+//for(num=0;num<=9999999999;num++){
+	printf("num = %d\n", n);
+//compruebaNumero(w);
+//}
 }
